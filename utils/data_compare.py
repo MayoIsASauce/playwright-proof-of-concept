@@ -6,10 +6,18 @@ from playwright.sync_api import Locator
 
 class DataComp(object):
     def __init__(self, data_stream: TextIOWrapper):
+        """Creates a new data comparer object
+            data_stream: A file stream with a json object
+            returns a new DataComp object with a stream loaded
+        """
         self.__stream: dict[str, str] = json.loads("".join(data_stream.readlines()))
         self.__lock_stream = True
 
     def data_import(self, comparable: list[Locator]):
+        """Import the data from a table identified by a Locator
+           comparable: The table of data
+           returns None
+        """
         self.__imported_data: dict[str, str] = {}
 
         for row in comparable:
@@ -30,6 +38,9 @@ class DataComp(object):
             self.__lock_stream = False
     
     def data_test(self) -> bool:
+        """Test the data from the table against the streamed data
+            returns False if comparison fails otherwise True
+        """
         if self.__lock_stream:
             raise ImportError("Please call `data_import` before test")
 
@@ -40,6 +51,10 @@ class DataComp(object):
             assert self.__stream['generalInfo'][KEY] == self.__imported_data[KEY], display_string
 
     def data_export(self, filename: str = None) -> None:
+        """Export the current imported data to a json file
+            filename: The name to use for the file, this can be left blank for default
+            returns None
+        """
         if self.__lock_stream:
             raise ImportError("Please call `data_import` before test")
         
