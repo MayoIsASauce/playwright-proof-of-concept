@@ -9,12 +9,11 @@ from utils.data_compare import DataComp
 
 load_dotenv("IntegrationLogin.env") # the login credentials
 
-DEFAULT_URL = "https://imgdev.mcdaltametrics.com/ers/login/MCD_AC_SBOX.html" # url to navigate to
 is_worker_syncd = False
 
 @fixture(scope="function", autouse=True) # runs before and after each test is called
 def before_and_after(page: Page):
-    page.goto(DEFAULT_URL) # navigate to the url
+    page.goto(os.getenv('DEFAULT_URL')) # navigate to the url
 
     yield page # allow test to execute
 
